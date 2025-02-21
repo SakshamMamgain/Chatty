@@ -1,97 +1,136 @@
-# Secure Messenger
+# Chatty - Secure Real-time Messenger
 
-A real-time secure messaging application built with React, TypeScript, Express, and Supabase. Features end-to-end encryption, real-time messaging using WebSockets, and a modern UI with shadcn/ui components.
+A modern, secure chat application featuring end-to-end encryption, real-time messaging, and a sleek user interface. Built with React, TypeScript, Express, and Supabase.
 
-## Features
+![Chat Interface](https://ui.shadcn.com/examples/chat.png)
 
-- 🔐 End-to-end encryption for messages
-- 👥 Create and join chat rooms
-- 🚀 Real-time messaging with WebSocket
-- 🎨 Modern UI with Tailwind CSS and shadcn/ui
-- 🔑 User authentication with session management
-- 📱 Responsive design for all devices
+## ✨ Features
 
-## Tech Stack
+- 🔒 **End-to-End Encryption** - All messages are encrypted using client-side encryption
+- 🚀 **Real-time Messaging** - Instant message delivery using WebSocket
+- 🔐 **Secure Authentication** - User authentication with session management
+- 💬 **Chat Rooms** - Create and join password-protected chat rooms
+- 📱 **Responsive Design** - Works seamlessly on both desktop and mobile
+- 🎨 **Modern UI** - Beautiful interface using shadcn/ui components
 
-- **Frontend**: React, TypeScript, Tailwind CSS, shadcn/ui
-- **Backend**: Express.js, WebSocket (ws)
-- **Database**: Supabase (PostgreSQL)
-- **Authentication**: Custom auth with Passport.js
-- **Security**: End-to-end encryption using simple-crypto-js
-- **Build Tool**: Vite
+## 🚀 Quick Start
 
-## Getting Started
+```bash
+# Clone the repository
+git clone https://github.com/SakshamMamgain/Chatty.git
+cd Chatty
 
-### Prerequisites
+# Install dependencies
+npm install
 
-- Node.js (v18 or higher)
-- npm (Node Package Manager)
-- Supabase account and project
+# Create environment file
+cp .env.example .env
 
-### Environment Setup
+# Add your Supabase credentials to .env
+# Get these from https://supabase.com -> Your Project -> Settings -> API
+SUPABASE_URL=your-project-url
+SUPABASE_SERVICE_KEY=your-service-role-key
 
-1. Create a new Supabase project
-2. Execute the SQL scripts in your Supabase database:
-   - Run `supabase_setup.sql` to create tables
-   - Run `supabase_rls.sql` to set up Row Level Security policies
+# Start the development server
+npm run dev
+```
 
-3. Set up environment variables:
-   ```
-   SUPABASE_URL=your-supabase-url
-   SUPABASE_SERVICE_KEY=your-service-role-key
-   PORT=3000 (optional, defaults to 3000)
-   NODE_ENV=development (for development)
-   ```
+Visit `http://localhost:3000` to use the application.
 
-### Installation
+## 💻 Tech Stack
 
-1. Clone the repository:
-   ```bash
-   git clone [repository-url]
-   cd secure-messenger
-   ```
+<table>
+  <tr>
+    <td align="center">Frontend</td>
+    <td>
+      <img src="https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black">
+      <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white">
+      <img src="https://img.shields.io/badge/Tailwind-38B2AC?style=flat&logo=tailwind-css&logoColor=white">
+    </td>
+  </tr>
+  <tr>
+    <td align="center">Backend</td>
+    <td>
+      <img src="https://img.shields.io/badge/Express-000000?style=flat&logo=express&logoColor=white">
+      <img src="https://img.shields.io/badge/WebSocket-010101?style=flat&logo=socket.io&logoColor=white">
+      <img src="https://img.shields.io/badge/Supabase-3FCF8E?style=flat&logo=supabase&logoColor=white">
+    </td>
+  </tr>
+  <tr>
+    <td align="center">Security</td>
+    <td>
+      <img src="https://img.shields.io/badge/E2E_Encryption-276DC3?style=flat&logo=data:image/png;base64,lock">
+      <img src="https://img.shields.io/badge/Session_Auth-000000?style=flat&logo=data:image/png;base64,key">
+    </td>
+  </tr>
+</table>
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+## 🔧 Setup Guide
 
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
+### 1. Supabase Setup
 
-4. Open your browser and navigate to `http://localhost:3000`
+1. Create a new project at [Supabase](https://supabase.com)
+2. Go to SQL Editor and run the following scripts:
+   - `supabase_setup.sql` - Creates database tables
+   - `supabase_rls.sql` - Sets up security policies
+3. Get your API credentials from Project Settings → API
 
-## Project Structure
+### 2. Local Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Run type checking
+npm run check
+
+# Build for production
+npm run build
+```
+
+### 3. Environment Variables
+
+Copy `.env.example` to `.env` and fill in your Supabase credentials:
+
+```env
+SUPABASE_URL=https://your-project-id.supabase.co
+SUPABASE_SERVICE_KEY=your-service-role-key
+```
+
+## 📁 Project Structure
 
 ```
-SecureMessenger/
-├── client/               # Frontend React application
+chatty/
+├── client/              # React frontend
 │   ├── src/
-│   │   ├── components/  # React components
-│   │   ├── hooks/      # Custom React hooks
-│   │   ├── lib/        # Utility functions
-│   │   └── pages/      # Page components
-├── server/              # Backend Express server
-│   ├── auth.ts         # Authentication setup
-│   ├── routes.ts       # API routes
-│   └── storage.ts      # Database operations
-└── shared/             # Shared TypeScript types and schemas
+│   │   ├── components/ # UI components
+│   │   ├── hooks/     # Custom React hooks
+│   │   ├── lib/       # Utilities
+│   │   └── pages/     # Page components
+├── server/             # Express backend
+│   ├── auth.ts        # Authentication
+│   ├── routes.ts      # API endpoints
+│   └── storage.ts     # Database operations
+└── shared/            # Shared types
 ```
 
-## Security Features
+## 🔐 Security Features
 
-- End-to-end encryption for messages
-- Secure password hashing using scrypt
-- Row Level Security in Supabase
+- End-to-end message encryption using `simple-crypto-js`
+- Secure password hashing with `scrypt`
+- Row Level Security with Supabase
 - Session-based authentication
-- HTTPS in production
+- HTTPS support for production
 
-## Contributing
+## 📝 License
 
-Feel free to submit issues and enhancement requests!
+MIT © [Saksham Mamgain](https://github.com/SakshamMamgain)
 
-## License
+---
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+<div align="center">
+  Made with ❤️ by <a href="https://github.com/SakshamMamgain">Saksham Mamgain</a>
+</div>
