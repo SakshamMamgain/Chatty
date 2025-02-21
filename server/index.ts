@@ -1,0 +1,91 @@
+/**
+ * Secure Messenger Server Entry Point
+ * 
+ * This module initializes the Express server with:
+ * - JSON body parsing
+ * - Request logging middleware
+ * - Error handling
+ * - Static file serving
+ * - Development mode hot reloading
+ */
+
+import express, { type Request, Response, NextFunction } from "express";
+import { registerRoutes } from "./routes";
+import { setupVite, serveStatic, log } from "./vite";
+
+// Create Express application
+const app = express();
+
+// Configure middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+// Disable deprecation warnings for Node.js v22
+process.removeAllListeners('warning');
+
+/**
+ * Request logging middleware
+ * Logs API requests with duration and response data
+ */
+app.use((req, res, next) => {
+  const start = Date.now();
+  const path = req.path;
+  let capturedJsonResponse: Record<string, any> | undefined = undefined;
+
+  const originalResJson = res.json;
+  res.json = function (bodyJson, ...args) {
+    capturedJsonResponse = bodyJson;
+    return originalResJson.apply(res, [bodyJson, ...args]);
+  };
+
+  res.on("finish", () => {
+    const duration = Date.now() - start;
+    if (path.startsWith("/api")) {
+      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
+      if (capturedJsonResponse) {
+        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+      }
+
+      if (logLine.length > 80) {
+        logLine = logLine.slice(0, 79) + "…";
+      }
+
+      log(logLine);
+    }
+  });
+
+  next();
+});
+
+/**
+ * Initialize server with routes and error handling
+ */
+(async () => {
+  const server = await registerRoutes(app);
+
+  /**
+   * Global error handler
+   * Provides consistent error response format
+   */
+  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+    const status = err.status || err.statusCode || 500;
+    const message = err.message || "Internal Server Error";
+
+    res.status(status).json({ message });
+    throw err;
+  });
+
+  // Setup Vite development server or static file serving
+  // Must be after all API routes to prevent route interference
+  if (app.get("env") === "development") {
+    await setupVite(app, server);
+  } else {
+    serveStatic(app);
+  }
+
+  // Use environment variable PORT if set, otherwise default to 5000
+  const PORT = process.env.PORT ? parseInt(process.env.PORT) : 5000;
+  server.listen(PORT, "0.0.0.0", () => {
+    log(`serving on port ${PORT}`);
+  });
+})();
